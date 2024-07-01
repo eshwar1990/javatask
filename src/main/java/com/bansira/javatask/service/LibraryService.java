@@ -16,6 +16,13 @@ import com.bansira.javatask.respository.DepartmentRespository;
 
 import jakarta.transaction.Transactional;
 
+/**
+ * 
+ * @author J Bharat Eshwar Reddy
+ * 
+ * Service class with business logic for actions on books
+ *
+ */
 @Service
 public class LibraryService {
 
@@ -25,6 +32,11 @@ public class LibraryService {
     @Autowired
     private DepartmentRespository departmentRepository;
     
+    /**
+     * 
+     * @param bookDTO
+     * @return success or failure message
+     */
     @Transactional
     public String addBook(BookDTO bookDTO) {
         // Check if a book with the same ISBN already exists
@@ -56,11 +68,21 @@ public class LibraryService {
         return "Book added successfully.";
     }
 
+    /**
+     * 
+     * @param ISBN
+     * delete the book
+     */
     @Transactional
     public void removeBook(String ISBN) {
         bookRepository.deleteByISBN(ISBN);
     }
 
+    /**
+     * 
+     * @param title
+     * @return list of books with title that matches
+     */
     public List<BookDTO> findBookByTitle(String title) {
     	List<BookDTO> allBooks = convertIteratorToListBookDTO(bookRepository.findByTitleIgnoreCaseContaining(title).iterator());
      	 
@@ -68,6 +90,11 @@ public class LibraryService {
        
     }
 
+    /**
+     * 
+     * @param author
+     * @return list of books with author name that matches
+     */
     public List<BookDTO> findBookByAuthor(String author) {
     	
     	List<BookDTO> allBooks = convertIteratorToListBookDTO(bookRepository.findByAuthorIgnoreCaseContaining(author).iterator());
@@ -76,12 +103,20 @@ public class LibraryService {
     	
     }
 
+    /**
+     * 
+     * @return list of books
+     */
     public List<BookDTO> listAllBooks() {
     	List<BookDTO> allBooks = convertIteratorToListBookDTO(bookRepository.findAll().iterator());
    	 
         return allBooks;
     }
 
+    /**
+     * 
+     * @return list of available books
+     */
     public List<BookDTO> listAvailableBooks() {
     	 
     	 List<BookDTO> allBooks = convertIteratorToListBookDTO(bookRepository.findAll().iterator());
@@ -89,6 +124,12 @@ public class LibraryService {
         return allBooks.stream().filter(BookDTO::isAvailable).toList();
     }
     
+    /**
+     * 
+     * @param iter1
+     * @return 
+     * Helper method to convert List of Book model to List of DTO
+     */
     private List<BookDTO> convertIteratorToListBookDTO(Iterator<Book> iter1) {
     	List<BookDTO> allBooks = new ArrayList<>();
     	
@@ -100,6 +141,12 @@ public class LibraryService {
     	return allBooks;
     }
     
+    /**
+     * 
+     * @param book
+     * @return
+     * Helper class to convert Book model to DTO
+     */
     private BookDTO convertBookToBookDto(Book book) {
     	BookDTO bookDTO = new BookDTO();
     	bookDTO.setAuthor(book.getAuthor());
